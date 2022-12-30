@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import {Suit, Rank, Card, deck, isTrumpSuit, isTrumpRank, isTrumpCard} from '../lib/zolite'
+import {Suit, Rank, Card, deck, isTrumpSuit, isTrumpRank, isTrumpCard, dealToPlayer, Player, player, shuffle, zolite, zoliteDeal} from '../lib/zolite'
 
 describe('Zolite', () => {
 
@@ -86,5 +86,55 @@ describe('Zolite', () => {
             index++;
         }
     });
-  })
+
+    it('shuffles numbers', () => {
+        let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let shuffled = shuffle(cards);
+        expect(shuffled.length).toBe(cards.length);
+        for (let i = 0; i != 10; ++i) {
+            expect(cards[i]).toBe(i);
+        }
+        var matches = 0;
+        for (let i = 0; i != 10; ++i) {
+            if (shuffled[i] == i) {
+                matches++;
+            }
+        }
+        expect(matches).toBeLessThan(10);
+    });
+
+    it('deals to player', () => {
+        let cards = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let p = player("test");
+        expect(p.hand.length).toBe(0);
+        p = dealToPlayer(p, cards);
+        expect(p.hand).toBe(cards);
+    });
+
+    it('deals the game', () => {
+        const leader = 2;
+        let z1 = zolite();
+        let z2 = zoliteDeal(z1, leader);
+
+        expect(z2.leader).toBe(leader);
+        expect(z2.turn).toBe(leader);
+
+        expect(z2.bigOne).toBe(z1.bigOne);
+        expect(z2.calledZole).toBe(z1.calledZole);
+        expect(z2.deck.length).toBe(2);
+        expect(z2.trick).toBe(z1.trick);
+        expect(z2.round).toBe(z1.round);
+
+        for (let i = 0; i != 3; ++i) {
+            let p1 = z1.players[i];
+            let p2 = z2.players[i];
+            expect(p2.name).toBe(p1.name);
+            expect(p2.role).toBe(p1.role);
+            expect(p2.score).toBe(p1.score);
+            expect(p1.hand.length).toBe(0);
+            expect(p2.hand.length).toBe(8);
+        }
+    });
+
+  });
   
