@@ -124,10 +124,11 @@ export function zolite() : Zolite {
 }
 
 export function zoliteDeal(z: Zolite, leader: number) : Zolite {
-    let p1 = dealToPlayer(z.players[0], z.deck.slice(0, 8));
-    let p2 = dealToPlayer(z.players[1], z.deck.slice(8, 16));
-    let p3 = dealToPlayer(z.players[2], z.deck.slice(16, 24));
-    let deck = z.deck.slice(24, 26);
+    let cards = shuffle(z.deck);
+    let p1 = dealToPlayer(z.players[0], cards.slice(0, 8));
+    let p2 = dealToPlayer(z.players[1], cards.slice(8, 16));
+    let p3 = dealToPlayer(z.players[2], cards.slice(16, 24));
+    let deck = cards.slice(24, 26);
 
     return {
         players: [ p1, p2, p3 ],

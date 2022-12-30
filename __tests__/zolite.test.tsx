@@ -125,6 +125,7 @@ describe('Zolite', () => {
         expect(z2.trick).toBe(z1.trick);
         expect(z2.round).toBe(z1.round);
 
+        var seenCards = Array<Number>();
         for (let i = 0; i != 3; ++i) {
             let p1 = z1.players[i];
             let p2 = z2.players[i];
@@ -133,7 +134,15 @@ describe('Zolite', () => {
             expect(p2.score).toBe(p1.score);
             expect(p1.hand.length).toBe(0);
             expect(p2.hand.length).toBe(8);
+            seenCards = seenCards.concat(p2.hand);
         }
+        seenCards = seenCards.concat(z2.deck);
+        expect(seenCards.length).toBe(26);
+        seenCards = seenCards.sort((a, b) => Number(a) - Number(b));
+        for (let i = 0; i != 26; ++i) {
+            expect(seenCards[i]).toBe(i);
+        }
+
     });
 
   });
