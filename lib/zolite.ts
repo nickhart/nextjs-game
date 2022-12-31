@@ -91,6 +91,10 @@ export function player(name: string) : Player {
    return { name: name, score: 0, role: Role.Undecided, hand: [] };
 }
 
+export function playerChoose(p: Player, role: Role) : Player {
+    return { name: p.name, score: p.score, role: role, hand: p.hand };
+}
+
 export function dealToPlayer(player: Player, cards: number[]) : Player {
     return { name: player.name, score: player.score, role: player.role, hand: cards};
 }
@@ -141,3 +145,38 @@ export function zoliteDeal(z: Zolite, leader: number) : Zolite {
         bigOne: z.bigOne
     };
 }
+
+export function zoliteChoose(z: Zolite, role: Role, callZole: boolean) : Zolite {
+    var turn = z.turn;
+    var round = z.round;
+    var calledZole = z.calledZole;
+    var players = z.players;
+    var bigOne = z.bigOne;
+
+    if (role === Role.BigOne) {
+        bigOne = turn;
+        if (callZole) {
+            calledZole = true;
+        }
+        for (let i = 0; i != 3; ++i) {
+            let p = z.players[i];
+            if (i === z.turn) {
+                players.push(playerChoose(p, role));
+            }
+            else {
+                players.push(p);
+            }
+        }
+    }
+    return {
+        players: players,
+        trick: z.trick,
+        deck: z.deck,
+        round: z.round,
+        turn: z.turn,
+        leader: z.leader,
+        calledZole: calledZole,
+        bigOne: bigOne
+    };
+}
+
